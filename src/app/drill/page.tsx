@@ -1,8 +1,15 @@
-import { getLatestQuestion } from "@/data/questions";
+import { notFound } from "next/navigation";
 import DrillQuiz from "@/components/DrillQuiz";
+import { getLatestQuestion } from "@/lib/supabase/questions";
 
-export default function DrillPage() {
-  const question = getLatestQuestion();
+export const dynamic = "force-dynamic";
+
+export default async function DrillPage() {
+  const question = await getLatestQuestion();
+
+  if (!question) {
+    notFound();
+  }
 
   return <DrillQuiz question={question} />;
 }

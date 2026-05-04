@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import type { LsatQuestion } from "@/data/questions";
+import type { LsatQuestion } from "@/lib/supabase/questions";
 
 type Props = {
   question: LsatQuestion;

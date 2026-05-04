@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import DrillQuiz from "@/components/DrillQuiz";
-import { getPublishedQuestions, getQuestionById } from "@/data/questions";
+import { getQuestionById } from "@/lib/supabase/questions";
+
+export const dynamic = "force-dynamic";
 
 type DrillDetailPageProps = {
   params: Promise<{
@@ -8,19 +10,13 @@ type DrillDetailPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return getPublishedQuestions().map((question) => ({
-    id: question.id,
-  }));
-}
-
 export default async function DrillDetailPage({
   params,
 }: DrillDetailPageProps) {
   const { id } = await params;
-  const question = getQuestionById(id);
+  const question = await getQuestionById(id);
 
-  if (!question || !question.published) {
+  if (!question) {
     notFound();
   }
 

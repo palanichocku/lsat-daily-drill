@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { getPublishedQuestions } from "@/data/questions";
+import { getPublishedQuestions } from "@/lib/supabase/questions";
 
-export default function ArchivePage() {
-  const drills = getPublishedQuestions();
+export const dynamic = "force-dynamic";
+
+export default async function ArchivePage() {
+  const drills = await getPublishedQuestions();
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6">
@@ -21,11 +23,21 @@ export default function ArchivePage() {
         </header>
 
         <section>
-          <h1 className="text-3xl font-bold tracking-tight">Drill Archive</h1>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">
+                Drill Archive
+              </h1>
 
-          <p className="mt-3 text-slate-300">
-            Review previous LSAT-style Logical Reasoning drills.
-          </p>
+              <p className="mt-3 text-slate-300">
+                Review previous LSAT-style Logical Reasoning drills.
+              </p>
+            </div>
+
+            <p className="text-sm text-slate-400">
+              {drills.length} published {drills.length === 1 ? "drill" : "drills"}
+            </p>
+          </div>
 
           <div className="mt-8 space-y-4">
             {drills.length === 0 ? (
