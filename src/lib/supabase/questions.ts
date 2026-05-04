@@ -21,6 +21,7 @@ export type LsatQuestion = {
   explanation: string;
   takeaway: string;
   published: boolean;
+  displayDate: string | null;
 };
 
 type DbLsatQuestion = {
@@ -41,7 +42,29 @@ type DbLsatQuestion = {
   explanation: string;
   takeaway: string;
   published: boolean;
+  display_date: string | null;
 };
+
+const QUESTION_SELECT = `
+  id,
+  drill_number,
+  question_type,
+  difficulty,
+  title,
+  topic,
+  prompt,
+  stem,
+  answer_a,
+  answer_b,
+  answer_c,
+  answer_d,
+  answer_e,
+  correct_answer,
+  explanation,
+  takeaway,
+  published,
+  display_date
+`;
 
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -65,6 +88,10 @@ function getSupabaseClient() {
       autoRefreshToken: false,
     },
   });
+}
+
+function getTodayIsoDate() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 function mapDbQuestion(row: DbLsatQuestion): LsatQuestion {
@@ -103,6 +130,7 @@ function mapDbQuestion(row: DbLsatQuestion): LsatQuestion {
     explanation: row.explanation,
     takeaway: row.takeaway,
     published: row.published,
+    displayDate: row.display_date,
   };
 }
 
@@ -111,27 +139,7 @@ export async function getPublishedQuestions() {
 
   const { data, error } = await supabase
     .from("lsat_questions")
-    .select(
-      `
-      id,
-      drill_number,
-      question_type,
-      difficulty,
-      title,
-      topic,
-      prompt,
-      stem,
-      answer_a,
-      answer_b,
-      answer_c,
-      answer_d,
-      answer_e,
-      correct_answer,
-      explanation,
-      takeaway,
-      published
-    `
-    )
+    .select(QUESTION_SELECT)
     .eq("published", true)
     .order("drill_number", { ascending: true });
 
@@ -144,31 +152,14 @@ export async function getPublishedQuestions() {
 
 export async function getLatestQuestion() {
   const supabase = getSupabaseClient();
+  const today = getTodayIsoDate();
 
   const { data, error } = await supabase
     .from("lsat_questions")
-    .select(
-      `
-      id,
-      drill_number,
-      question_type,
-      difficulty,
-      title,
-      topic,
-      prompt,
-      stem,
-      answer_a,
-      answer_b,
-      answer_c,
-      answer_d,
-      answer_e,
-      correct_answer,
-      explanation,
-      takeaway,
-      published
-    `
-    )
+    .select(QUESTION_SELECT)
     .eq("published", true)
+    .lte("display_date", today)
+    .order("display_date", { ascending: false })
     .order("drill_number", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -185,27 +176,7 @@ export async function getQuestionById(id: string) {
 
   const { data, error } = await supabase
     .from("lsat_questions")
-    .select(
-      `
-      id,
-      drill_number,
-      question_type,
-      difficulty,
-      title,
-      topic,
-      prompt,
-      stem,
-      answer_a,
-      answer_b,
-      answer_c,
-      answer_d,
-      answer_e,
-      correct_answer,
-      explanation,
-      takeaway,
-      published
-    `
-    )
+    .select(QUESTION_SELECT)
     .eq("id", id)
     .eq("published", true)
     .maybeSingle();
