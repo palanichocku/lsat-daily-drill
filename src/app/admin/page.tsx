@@ -400,21 +400,30 @@ export default async function AdminPage({
                     </span>
                   </div>
 
-                  <form action={togglePublishedAction}>
-                    <input type="hidden" name="id" value={question.id} />
-                    <input
-                      type="hidden"
-                      name="published"
-                      value={String(question.published)}
-                    />
-
-                    <button
-                      type="submit"
-                      className="rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800"
+                  <div className="flex flex-col gap-2 sm:flex-row md:flex-col">
+                    <Link
+                      href={`/admin/questions/${question.id}`}
+                      className="rounded-xl border border-amber-300/40 px-4 py-2 text-center text-sm font-semibold text-amber-200 transition hover:bg-amber-300/10"
                     >
-                      {question.published ? "Unpublish" : "Publish"}
-                    </button>
-                  </form>
+                      Edit
+                    </Link>
+
+                    <form action={togglePublishedAction}>
+                      <input type="hidden" name="id" value={question.id} />
+                      <input
+                        type="hidden"
+                        name="published"
+                        value={String(question.published)}
+                      />
+
+                      <button
+                        type="submit"
+                        className="w-full rounded-xl border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:bg-slate-800"
+                      >
+                        {question.published ? "Unpublish" : "Publish"}
+                      </button>
+                    </form>
+                  </div>
                 </div>
               ))}
             </div>
