@@ -408,6 +408,13 @@ export default async function AdminPage({
                       Edit
                     </Link>
 
+                    <Link
+                      href={`/admin/preview/${question.id}`}
+                      className="rounded-xl border border-slate-700 px-4 py-2 text-center text-sm font-semibold text-slate-200 transition hover:bg-slate-800"
+                    >
+                      Preview
+                    </Link>
+                    
                     <form action={togglePublishedAction}>
                       <input type="hidden" name="id" value={question.id} />
                       <input

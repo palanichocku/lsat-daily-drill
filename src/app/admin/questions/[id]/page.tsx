@@ -346,7 +346,7 @@ export default async function EditQuestionPage({
               </button>
 
               <Link
-                href={`/drill/${question.id}`}
+                href={`/admin/preview/${question.id}`}
                 className="rounded-xl border border-slate-700 px-6 py-3 text-center font-semibold text-slate-200 transition hover:bg-slate-800"
               >
                 Preview Drill
